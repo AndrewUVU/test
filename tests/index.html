@@ -15,22 +15,36 @@
     </style>
 </head>
 <body>
-	<ul id="messages"></ul>
+	<!--<ul id="messages"></ul>
     <form action="">
       <input id="m" autocomplete="off" /><button>Send</button>
-    </form>
+    </form>-->
+
+    <button type="button" id="startBtn">Start Game</button> 
+ 	
+    <p id="players paragraph">Number of players: <span id="players"></span></p>
+
     <script src="/socket.io/socket.io.js"></script>
+    <script src="ShipMovement.js"></script>
+    <script src="initMap.js"></script>
     <script src="game.js"></script>
 
 <script>
-	//var socket = io();
-	$('form').submit(function(){
+	//init();
+	/*$('form').submit(function(){
 		socket.emit('chat message', $('#m').val());
 	$('#m').val('');
 		return false;
 	});
 	socket.on('chat message', function(msg){
 		$('#messages').append($('<li>').text(msg));
+	});*/
+	socket.on('update number of players', function(playerNum) {
+		$('#players').html(playerNum);
+	});
+
+	$('#startBtn').click(function() {
+		socket.emit('start game');
 	});
 	
 </script>
