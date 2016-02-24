@@ -21,4 +21,9 @@ function create() {
 }
 
 function update() {
+	
+}
+
+function setStartStationLocation() {
+
 }

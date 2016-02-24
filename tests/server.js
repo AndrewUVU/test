@@ -5,7 +5,7 @@ var io = require('socket.io')(http);
 var fs = require('fs');
 app.use(express.static('public'));
 
-Player = require("./Player").Player;
+Player = require("./ServerPlayers").Player;
 
 var players;
 var MAXPLAYERS = 2;
@@ -16,19 +16,17 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
-io.on('connection', function(socket){
-	//console.log('a user' +socket.id+' connected');
+io.on('connection', function(socket) {
+	console.log('a user' +socket.id+' connected');
 	
 	// add player
-	if (players.length < MAXPLAYERS) {
-		var newPlayer = new Player();
-		newPlayer.id = socket.id;
-		players.push(newPlayer);
-	};
-
+	var newPlayer = new Player();
+	newPlayer.id = socket.id;
+	players.push(newPlayer);
+	
 	io.emit('update number of players', players.length);
 	
-	console.log(players);
+	//console.log(players);
 
 	socket.on('disconnect', function() {
 		console.log('user disconnected');
@@ -45,9 +43,15 @@ io.on('connection', function(socket){
 				var startPlayer = findPlayerById(players[i].id);
 				var randomHex = Math.floor(Math.random()*hexTileArray.length);
 				startPlayer.setStationLocation(hexTileArray[randomHex][0], hexTileArray[randomHex][1], hexTileArray[randomHex][2]);
+				io.emit('init players on client', 
+					{ 
+						id: startPlayer.getPlayerId(), 
+						x: startPlayer.getStationLocationX(), 
+						y: startPlayer.getStationLocationY(), 
+						z: startPlayer.getStationLocationZ() 
+					}
+				);
 			};
-
-			//io.emit('chat message', msg);
 		}
 		else{
 			console.log('Not enough players!');
