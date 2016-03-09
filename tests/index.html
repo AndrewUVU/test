@@ -12,6 +12,10 @@
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
+      #teamLocations { float: left; clear: both; }
+      #gameDiv { float: right; }
+      #currentTurn { float: left; clear: both; }
+      .radioDiv { float: left; clear: both; }
     </style>
 </head>
 <body>
@@ -23,6 +27,22 @@
     <button type="button" id="startBtn">Start Game</button> 
  	
     <p id="players paragraph">Number of players: <span id="players"></span></p>
+    
+	<div><input type="radio" name="Formation" value="AFormation"> A Formation</div>
+	<div><input type="radio" name="Formation" value="BFormation"> B Formation</div>
+	<div><input type="radio" name="Formation" value="CFormation"> C Formation</div>
+
+	<div id="currentTurn">
+    	<p> </p>
+    </div>
+
+    <div id="teamLocations">
+    	<p>Your controlled locations:</p>
+    </div>
+
+    <div id="gameDiv">
+    	<p></p>
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="ShipMovement.js"></script>
@@ -42,6 +62,15 @@
 	});*/
 	socket.on('update number of players', function(playerNum) {
 		$('#players').html(playerNum);
+	});
+
+	socket.on('display turn', function(yourTurn) {
+		console.log(yourTurn);
+		if (yourTurn.currentPlayerBool == true) {
+			$('#currentTurn > p').html("Your turn");
+		} else {
+			$('#currentTurn > p').html("Your opponents turn");
+		};
 	});
 
 	$('#startBtn').click(function() {

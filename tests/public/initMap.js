@@ -23,7 +23,9 @@ var GameMap = function() {
 			hextiles[i][j] = hextile;
 			hextiles[i][j].anchor.setTo(0.5, 0.5);
 			hextiles[i][j].inputEnabled = true;
-			//hextiles[i][j].events.onInputDown.add(clickTest, this);
+
+			//enable click input
+			hextiles[i][j].events.onInputDown.add(hexClicked, this);
 			
 			hextiles[i][j].reset(hexXPosition, hexYPosition);
 

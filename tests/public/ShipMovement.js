@@ -1,8 +1,8 @@
-function clickTest(sprite, pointer) {
+function hexClicked(sprite, pointer) {
 	if (checkDistance(sprite) == 1) {
-		setShipLocation(redShip, sprite.x, sprite.y, sprite.hexTileX, sprite.hexTileY, sprite.hexTileZ);
+		//setShipLocation(redShip, sprite.x, sprite.y, sprite.hexTileX, sprite.hexTileY, sprite.hexTileZ);
 	};
-	socket.emit('client_data', {'Hex Tile': sprite.name});
+	socket.emit('hex tile clicked', {'Hex Tile': sprite.name});
 }
 
 function checkDistance(clickedHexTile) {

@@ -18,12 +18,25 @@ var Player = function() {
 		this.id = playerId;
 	};
 
+	var getStationLocation = function () {
+
+	};
+
+	var addDisplayLocations = function (x, y, z) {
+		var para = document.createElement("p");
+		var node = document.createTextNode("Your starting location is: " + x + ", " + y + ", " + z);
+		para.appendChild(node);
+		var element = document.getElementById("teamLocations");
+		element.appendChild(para);
+	};
+
 	return {
 		setStationLocation: setStationLocation,
 		stationLocationX: stationLocationX,
 		stationLocationY: stationLocationY,
 		stationLocationZ: stationLocationZ,
-		setPlayerId: setPlayerId
+		setPlayerId: setPlayerId,
+		addDisplayLocations: addDisplayLocations
 	}
 }
 
@@ -33,5 +46,7 @@ socket.on('init players on client', function(data) {
 	newPlayer.setPlayerId(playerInfo[0]);
 	newPlayer.setStationLocation(playerInfo[1], playerInfo[2], playerInfo[3]);
 	console.log(newPlayer);
+	//window.alert("Your starting location is: " + playerInfo[1]  + ", " + playerInfo[2] + ", " + playerInfo[3]);
+	newPlayer.addDisplayLocations(playerInfo[1], playerInfo[2], playerInfo[3]);
 });
 

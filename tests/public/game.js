@@ -1,4 +1,4 @@
-var game = new Phaser.Game(1100, 900, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(1100, 900, Phaser.AUTO, 'gameDiv', { preload: preload, create: create, update: update });
 var redShip, blueShip;
 var socket = io.connect();
 

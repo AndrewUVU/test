@@ -26,14 +26,12 @@ io.on('connection', function(socket) {
 	
 	io.emit('update number of players', players.length);
 	
-	//console.log(players);
-
 	socket.on('disconnect', function() {
 		console.log('user disconnected');
 
 		var removePlayer = findPlayerById(this.id);
 		players.splice(players.indexOf(removePlayer), 1);
-
+		io.emit('update number of players', players.length);
 	});
 
 	socket.on('start game', function() {
@@ -43,15 +41,16 @@ io.on('connection', function(socket) {
 				var startPlayer = findPlayerById(players[i].id);
 				var randomHex = Math.floor(Math.random()*hexTileArray.length);
 				startPlayer.setStationLocation(hexTileArray[randomHex][0], hexTileArray[randomHex][1], hexTileArray[randomHex][2]);
-				io.emit('init players on client', 
-					{ 
-						id: startPlayer.getPlayerId(), 
-						x: startPlayer.getStationLocationX(), 
-						y: startPlayer.getStationLocationY(), 
-						z: startPlayer.getStationLocationZ() 
-					}
-				);
-			};
+				// send info of player only to that specific player and no one else
+				io.sockets.connected[players[i].id].emit('init players on client', 
+				{ 
+					id: startPlayer.getPlayerId(), 
+					x: startPlayer.getStationLocationX(), 
+					y: startPlayer.getStationLocationY(), 
+					z: startPlayer.getStationLocationZ() 
+				});
+			};	
+			switchTurn();			
 		}
 		else{
 			console.log('Not enough players!');
@@ -63,11 +62,12 @@ io.on('connection', function(socket) {
 		hexTileArray.push(locationOfHex);
 	});
 
+	
+	socket.on('hex tile clicked', function(data) {
+		console.log(data);
+	});
 	/*socket.on('chat message', function(msg) {
 		io.emit('chat message', msg);
-	});
-	socket.on('client_data', function(data) {
-		console.log(data);
 	});
 	socket.on('ship_location', function(data) {
 		console.log(data);
@@ -94,4 +94,26 @@ function findPlayerById(id) {
 	};
 	
 	return false;
+};
+
+function switchTurn() {
+	debugger;
+	var currentPlayerindex = Math.floor(Math.random()*players.length);
+	var currentPlayer = findPlayerById(players[currentPlayerindex].id);
+	currentPlayer.setCurrentPlayer();
+	for (var i = 0; i < players.length; i++) {
+		if (currentPlayer === players[i]) {
+			var currentPlayerBool = true;
+			io.sockets.connected[players[i].id].emit('display turn', 
+			{ 
+				currentPlayerBool
+			});
+		} else {
+			var currentPlayerBool = false;
+			io.sockets.connected[players[i].id].emit('display turn', 
+			{ 
+				currentPlayerBool
+			});
+		};
+	};
 };
