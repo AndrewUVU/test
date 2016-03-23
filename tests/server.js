@@ -11,6 +11,7 @@ var players;
 var MAXPLAYERS = 2;
 
 var hexTileArray = [];
+var arrayOfLocationObjects = [];
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -37,19 +38,37 @@ io.on('connection', function(socket) {
 	socket.on('start game', function() {
 		if (players.length == 2) {
 			console.log('Start');
+			
+			// have to reset here from wierd bug adding same player multiple times
+			arrayOfLocationObjects = [];
+			// this will create location objects for server to keep track of
+			initLocationsOnServer();
+
 			for (var i = 0; i < players.length; i++) {
 				var startPlayer = findPlayerById(players[i].id);
-				var randomHex = Math.floor(Math.random()*hexTileArray.length);
-				startPlayer.setStationLocation(hexTileArray[randomHex][0], hexTileArray[randomHex][1], hexTileArray[randomHex][2]);
+				var randomLocationIndex = Math.floor(Math.random()*arrayOfLocationObjects.length);
+				
+				while(arrayOfLocationObjects[randomLocationIndex].owner !== "neutral") {
+					var randomLocationIndex = Math.floor(Math.random()*arrayOfLocationObjects.length);
+				}
+
+				arrayOfLocationObjects[randomLocationIndex].owner = startPlayer.id;
+
+				//setRandomStartLocations(i);
+				
+				//var randomHex = Math.floor(Math.random()*hexTileArray.length);
+				//startPlayer.setStationLocation(hexTileArray[randomHex][0], hexTileArray[randomHex][1], hexTileArray[randomHex][2]);
 				// send info of player only to that specific player and no one else
-				io.sockets.connected[players[i].id].emit('init players on client', 
+				/*io.sockets.connected[players[i].id].emit('init players on client', 
 				{ 
 					id: startPlayer.getPlayerId(), 
 					x: startPlayer.getStationLocationX(), 
 					y: startPlayer.getStationLocationY(), 
 					z: startPlayer.getStationLocationZ() 
-				});
-			};	
+				});*/
+			};
+			//console.log(arrayOfLocationObjects);
+			updateLocationsPlayersCanSee();
 			switchTurn();			
 		}
 		else{
@@ -85,6 +104,38 @@ http.listen(3000, function() {
   players = [];
 });
 
+function initLocationsOnServer() {
+	for (var i = 0; i < hexTileArray.length; i++) {
+		var locationObject = {
+			name: hexTileArray[i][0].toString() +  hexTileArray[i][1].toString() + hexTileArray[i][2].toString(),
+			x: hexTileArray[i][0],
+			y: hexTileArray[i][1],
+			z: hexTileArray[i][2],
+			owner: "neutral"
+		}
+		arrayOfLocationObjects.push(locationObject);
+	};
+	//console.log(arrayOfLocationObjects);
+};
+
+function updateLocationsPlayersCanSee() {
+		// go through all players to give correct updates
+		for (var i = 0; i < players.length; i++) {
+
+			var currentPlayer = findPlayerById(players[i].id);
+			// get all locations to give to player
+			for (var j = 0; j < arrayOfLocationObjects.length; j++) {
+				if (arrayOfLocationObjects[j].owner === currentPlayer.id) {
+					currentPlayer.addLocationToPlayerControl(arrayOfLocationObjects[j].name);
+				};
+			};
+			io.sockets.connected[currentPlayer.id].emit('update what player can see', 
+			{ 
+				locations: currentPlayer.getLocationsOfPlayerControl()
+			});
+		};
+};
+
 // Find player by ID
 function findPlayerById(id) {
 	var i;
@@ -97,7 +148,6 @@ function findPlayerById(id) {
 };
 
 function switchTurn() {
-	debugger;
 	var currentPlayerindex = Math.floor(Math.random()*players.length);
 	var currentPlayer = findPlayerById(players[currentPlayerindex].id);
 	currentPlayer.setCurrentPlayer();
@@ -116,4 +166,10 @@ function switchTurn() {
 			});
 		};
 	};
+};
+
+function checkDistanceOfStart(clickedHexTile) {
+	console.log('...');
+	//var val = (Math.abs(clickedHexTile.hexTileX - redShip.XLocation) + Math.abs(clickedHexTile.hexTileY - redShip.YLocation) + Math.abs(clickedHexTile.hexTileZ - redShip.ZLocation)) / 2;
+	//return val;
 };

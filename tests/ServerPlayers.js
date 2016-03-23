@@ -1,5 +1,6 @@
 var Player = function() {
 	var id;
+	var locationsPlayerControls = [];
 	var stationLocationX;
 	var stationLocationY;
 	var stationLocationZ;
@@ -23,6 +24,14 @@ var Player = function() {
 		return this.id;
 	};
 
+	var addLocationToPlayerControl = function(location) {
+		locationsPlayerControls.push(location);
+	};
+
+	var getLocationsOfPlayerControl = function() {
+		return locationsPlayerControls;
+	};
+
 	var getStationLocationX = function() {
 		return this.stationLocationX;
 	};
@@ -42,7 +51,9 @@ var Player = function() {
 		getStationLocationX: getStationLocationX,
 		getStationLocationY: getStationLocationY,
 		getStationLocationZ: getStationLocationZ,
-		getPlayerId: getPlayerId
+		getPlayerId: getPlayerId,
+		addLocationToPlayerControl: addLocationToPlayerControl,
+		getLocationsOfPlayerControl: getLocationsOfPlayerControl
 	}
 }
 

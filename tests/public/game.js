@@ -15,8 +15,8 @@ function create() {
 	
 	GameMap();
 	
-	redShip = game.add.sprite(-10000, -10000, 'RedShip');
-	blueShip = game.add.sprite(-10000, -10000, 'RedShip');
+	//redShip = game.add.sprite(-10000, -10000, 'RedShip');
+	//blueShip = game.add.sprite(-10000, -10000, 'RedShip');
 	//setShipLocation(redShip, hextiles[rowIndex][colIndex].x, hextiles[rowIndex][colIndex].y, hextiles[rowIndex][colIndex].hexTileX, hextiles[rowIndex][colIndex].hexTileY, hextiles[rowIndex][colIndex].hexTileZ);
 }
 
@@ -27,3 +27,25 @@ function update() {
 function setStartStationLocation() {
 
 }
+
+function lightUpCurrentLocations() {
+	console.log("location");
+}
+
+socket.on('update what player can see', function(data) {
+	for (var k = 0; k < data.locations.length; k++) {
+		addShip(data.locations[k]);
+	};
+});
+
+function addShip(data) {
+	var tempShip = game.add.sprite(-10000, -10000, 'RedShip');
+	for (var i = 0; i < hextiles.length; i++) {
+		for (var j = 0; j < hextiles.length; j++) {
+			currentHexTile = hextiles[i][j];
+			if (currentHexTile.name === data) {
+				tempShip.reset(currentHexTile.x, currentHexTile.y);
+			};
+		};
+	};
+};

@@ -1,4 +1,5 @@
 var hextiles = [];
+var locations = [];
 
 var hexXPosition = 200;
 var hexYPosition = 400;
@@ -33,7 +34,7 @@ var GameMap = function() {
 			hextiles[i][j].hexTileY = hexTileY;
 			hextiles[i][j].hexTileZ = hexTileZ;
 			socket.emit('map setup', {hexTileX,hexTileY,hexTileZ});
-			hextiles[i][j].name = hexTileX+", "+hexTileY+", "+hexTileZ;
+			hextiles[i][j].name = hexTileX.toString()+hexTileY.toString()+hexTileZ.toString();
 
 			var style = { font: "32px Arial", fill: "#ffffff", align: "center", id: 'hexTileX, + hexTileY, +hexTileZ' };
 			text = game.add.text(0, 0, hexTileX+", "+hexTileY+", "+ hexTileZ, style);
@@ -69,4 +70,6 @@ var GameMap = function() {
 var getHexArray = function() {
 	return hextiles;
 }
+
+
 //exports.hextiles = hextiles;

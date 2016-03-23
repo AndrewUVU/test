@@ -39,7 +39,7 @@ var Player = function() {
 		addDisplayLocations: addDisplayLocations
 	}
 }
-
+/*
 socket.on('init players on client', function(data) {
 	var newPlayer = new Player();
 	playerInfo = Object.keys(data).map(function(k) { return data[k] });
@@ -48,5 +48,6 @@ socket.on('init players on client', function(data) {
 	console.log(newPlayer);
 	//window.alert("Your starting location is: " + playerInfo[1]  + ", " + playerInfo[2] + ", " + playerInfo[3]);
 	newPlayer.addDisplayLocations(playerInfo[1], playerInfo[2], playerInfo[3]);
+	lightUpCurrentLocations();
 });
-
+*/

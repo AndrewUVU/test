@@ -1,14 +1,8 @@
 function hexClicked(sprite, pointer) {
-	if (checkDistance(sprite) == 1) {
+	//if (checkDistance(sprite) == 1) {
 		//setShipLocation(redShip, sprite.x, sprite.y, sprite.hexTileX, sprite.hexTileY, sprite.hexTileZ);
-	};
+	//};
 	socket.emit('hex tile clicked', {'Hex Tile': sprite.name});
-}
-
-function checkDistance(clickedHexTile) {
-	console.log('...');
-	//var val = (Math.abs(clickedHexTile.hexTileX - redShip.XLocation) + Math.abs(clickedHexTile.hexTileY - redShip.YLocation) + Math.abs(clickedHexTile.hexTileZ - redShip.ZLocation)) / 2;
-	//return val;
 }
 
 function setShipLocation(shipSprite, xLocationOnHex, yLocationOnHex, hexTileX, hexTileY, hexTileZ) {
