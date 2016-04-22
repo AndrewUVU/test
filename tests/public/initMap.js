@@ -43,7 +43,7 @@ var GameMap = function() {
 			hextiles[i][j].addChild(text);
 
 			hexXPosition = hexXPosition + hextiles[i][j].width*(3/4);
-			hexYPosition = hexYPosition - hextiles[i][j].width*(1/2);
+			hexYPosition = hexYPosition - hextiles[i][j].height*(1/2);
 
 			hexTileX = hexTileX + 1;
 			hexTileZ = hexTileZ - 1;
@@ -53,11 +53,11 @@ var GameMap = function() {
 		hexTileY = hexTileY - 1;
 		hexTileZ = 0;
 		hexXPosition = hexXOrigionPosition + hextile.width*(3/4);
-		hexYPosition = hexYOrigionPosition + hextile.width*(1/2);
+		hexYPosition = hexYOrigionPosition + hextile.height*(1/2);
 		hexXOrigionPosition = hexXPosition;
 		hexYOrigionPosition = hexYPosition;
 	};
-	//console.log(hextiles);
+	console.log(hextiles);
 	//var rowIndex = Math.floor(Math.random()*hextiles.length);
 	//var colIndex = Math.floor(Math.random()*hextiles.length);
 	//var sendX = hextiles[rowIndex][colIndex].hexTileX;
